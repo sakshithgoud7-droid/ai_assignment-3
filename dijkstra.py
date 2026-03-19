@@ -18,9 +18,8 @@ def load_graph(filename):
     return graph
 
 def dijkstra(graph, start):
-    distances = {}
-    for city in graph:
-        distances[city] = float('inf')
+    distances = {city: float('inf') for city in graph}
+    parent = {city: None for city in graph}
 
     distances[start] = 0
     pq = [(0, start)]
@@ -34,15 +33,28 @@ def dijkstra(graph, start):
 
             if new_distance < distances[neighbor]:
                 distances[neighbor] = new_distance
+                parent[neighbor] = current_city
                 heapq.heappush(pq, (new_distance, neighbor))
 
-    return distances
+    return distances, parent
+
+def get_path(parent, end):
+    path = []
+    while end is not None:
+        path.append(end)
+        end = parent[end]
+    return path[::-1]
 
 graph = load_graph("cities.csv")
 
-start_city = "Delhi"
-result = dijkstra(graph, start_city)
+start = input("Enter start city: ")
+end = input("Enter destination city: ")
 
-print("Shortest distances from", start_city)
-for city in result:
-    print(city, ":", result[city], "km")
+distances, parent = dijkstra(graph, start)
+
+if end in distances and distances[end] != float('inf'):
+    path = get_path(parent, end)
+    print("Shortest distance:", distances[end], "km")
+    print("Path:", " -> ".join(path))
+else:
+    print("No path found")
