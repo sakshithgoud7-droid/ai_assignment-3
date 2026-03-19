@@ -1,4 +1,7 @@
-import heapq# Load graph from CSV
+import heapq
+import csv
+from collections import defaultdict
+
 def load_graph(filename):
     graph = defaultdict(dict)
 
@@ -13,7 +16,6 @@ def load_graph(filename):
             graph[dest][src] = dist
 
     return graph
-
 
 def dijkstra(graph, start):
     distances = {}
@@ -35,6 +37,8 @@ def dijkstra(graph, start):
                 heapq.heappush(pq, (new_distance, neighbor))
 
     return distances
+
+graph = load_graph("cities.csv")
 
 start_city = "Delhi"
 result = dijkstra(graph, start_city)
