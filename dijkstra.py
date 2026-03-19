@@ -1,13 +1,19 @@
-import heapq
+import heapq# Load graph from CSV
+def load_graph(filename):
+    graph = defaultdict(dict)
 
-graph = {
-    "Delhi": {"Agra": 233, "Jaipur": 280, "Lucknow": 555},
-    "Agra": {"Delhi": 233, "Kanpur": 290},
-    "Jaipur": {"Delhi": 280, "Udaipur": 395},
-    "Lucknow": {"Delhi": 555, "Kanpur": 90},
-    "Kanpur": {"Agra": 290, "Lucknow": 90},
-    "Udaipur": {"Jaipur": 395}
-}
+    with open(filename, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            src = row['source'].strip()
+            dest = row['destination'].strip()
+            dist = int(row['distance'])
+
+            graph[src][dest] = dist
+            graph[dest][src] = dist
+
+    return graph
+
 
 def dijkstra(graph, start):
     distances = {}
